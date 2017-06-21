@@ -24,10 +24,6 @@ async function swActivate() {
 
 async function fetchFromNetworkAndCache(req) {
     const res = await fetch(req);
-    if (!res.url) {
-        // foreign requests will be res.type === 'opaque' and missing a url
-        return res;
-    }
     const cache = await caches.open(VERSION);
     cache.put(req, res.clone());
     return res;
