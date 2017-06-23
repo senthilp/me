@@ -4,6 +4,23 @@ const ASSETS = [
     '/images/senthil.png'
 ];
 
+function getOfflineResponse(reason) {
+    const offlineMsg = `
+        ***********************************************************************
+        <br/>
+        <strong>Looks like you are either offline or something weird happened on my end</strong>
+        <br/>
+        ***********************************************************************        
+        <br/><br/>
+        Possible reason(s): ${reason || 'None'}
+    `;
+    return new Response(offlineMsg, {
+        status: 503,
+        statusText: 'Service Unavailable',
+        headers: { 'Content-Type': 'text/html' }
+    });
+}
+
 async function swInstall() {
     const cache = await caches.open(VERSION);
     await cache.addAll(ASSETS);
@@ -39,6 +56,19 @@ async function fetchFromNetworkAndCache(req) {
     return res;
 }
 
+async function fetchNetworkFirst(req) {
+    let res;
+    try {
+        res = await fetchFromNetworkAndCache(req);
+    } catch (ex) {
+        res = await fretchFromCache(req);
+    }
+    if (!res) {
+        res = getOfflineResponse(`Cache is empty`);
+    }
+    return res;
+}
+
 async function fetchFastest(req) {
     return new Promise(resolve => {
         const networkFetch = fetchFromNetworkAndCache(req);
@@ -49,11 +79,7 @@ async function fetchFastest(req) {
         const maybeReject = reason => {
             reasons.push(reason.toString());
             if (rejected) {
-                resolve(new Response('Looks like you are either offline or something weird happened on my end', {
-                    status: 503,
-                    statusText: 'Service Unavailable',
-                    headers: { 'Content-Type': 'text/html' }
-                }));
+                resolve(getOfflineResponse(`"${reasons.join('", "')}"`));
             } else {
                 rejected = true;
             }
@@ -63,7 +89,7 @@ async function fetchFastest(req) {
             if (result instanceof Response) {
                 resolve(result);
             } else {
-                maybeReject(`No result returned`);
+                maybeReject(`No result returned from cache`);
             }
         };
 
@@ -81,7 +107,11 @@ async function swFetch(e) {
         return;
     }
 
-    e.respondWith(fetchFastest(req));
+    if (req.method === "GET" && url.pathname === '/') {
+        e.respondWith(fetchNetworkFirst(req));
+    } else {
+        e.respondWith(fetchFastest(req));
+    }
 }
 
 self.addEventListener('install', e => e.waitUntil(swInstall()));
