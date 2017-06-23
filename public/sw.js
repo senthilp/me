@@ -22,21 +22,55 @@ async function swActivate() {
     await self.clients.claim();
 }
 
+async function addToCache(req, res) {
+    const cache = await caches.open(VERSION);
+    cache.put(req, res);
+}
+
+async function fretchFromCache(req) {
+    const cache = await caches.open(VERSION);
+    const cacheRes = await cache.match(req);
+    return cacheRes;
+}
+
 async function fetchFromNetworkAndCache(req) {
     const res = await fetch(req);
-    const cache = await caches.open(VERSION);
-    cache.put(req, res.clone());
+    addToCache(req, res.clone());
     return res;
 }
 
 async function fetchFastest(req) {
-    const networkFetch = fetchFromNetworkAndCache(req);
-    const cache = await caches.open(VERSION);
-    const response = await cache.match(req);
-    if (response) {
-        return response;
-    }
-    return networkFetch;
+    return new Promise(resolve => {
+        const networkFetch = fetchFromNetworkAndCache(req);
+        const cacheFetch = fretchFromCache(req);
+        let rejected = false;
+        const reasons = [];
+
+        const maybeReject = reason => {
+            reasons.push(reason.toString());
+            if (rejected) {
+                resolve(new Response('Looks like you are either offline or something weird happened on my end', {
+                    status: 503,
+                    statusText: 'Service Unavailable',
+                    headers: { 'Content-Type': 'text/html' }
+                }));
+            } else {
+                rejected = true;
+            }
+        };
+
+        const maybeResolve = result => {
+            if (result instanceof Response) {
+                resolve(result);
+            } else {
+                maybeReject(`No result returned`);
+            }
+        };
+
+        // Whichever resolves first will be the winner
+        networkFetch.then(maybeResolve, maybeReject);
+        cacheFetch.then(maybeResolve, maybeReject);
+    });
 }
 
 async function swFetch(e) {
