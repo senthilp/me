@@ -12,7 +12,7 @@ function getOfflineResponse(reason) {
         <br/>
         ***********************************************************************        
         <br/><br/>
-        Possible reason(s): ${reason || 'None'}
+        <div style="display:none;">Possible reason(s): ${reason || 'None'}</div>
     `;
     return new Response(offlineMsg, {
         status: 503,
@@ -47,6 +47,9 @@ async function addToCache(req, res) {
 async function fretchFromCache(req) {
     const cache = await caches.open(VERSION);
     const cacheRes = await cache.match(req);
+    if (!cacheRes) {
+        throw Error(`Item not found in cache`);
+    }
     return cacheRes;
 }
 
@@ -57,16 +60,23 @@ async function fetchFromNetworkAndCache(req) {
 }
 
 async function fetchNetworkFirst(req) {
-    let res;
+    const reasons = [];
+    // Try netwrok first
     try {
-        res = await fetchFromNetworkAndCache(req);
-    } catch (ex) {
-        res = await fretchFromCache(req);
+        return await fetchFromNetworkAndCache(req);
+    } catch (e) {
+        reasons.push(e.message);
     }
-    if (!res) {
-        res = getOfflineResponse(`Cache is empty`);
+
+    // Network failed so try cache
+    try {
+        return await fretchFromCache(req);
+    } catch (e) {
+        reasons.push(e.message);
     }
-    return res;
+
+    // Even cache failed so get offline response
+    return getOfflineResponse(reasons.join(', '));
 }
 
 async function fetchFastest(req) {
@@ -79,23 +89,15 @@ async function fetchFastest(req) {
         const maybeReject = reason => {
             reasons.push(reason.toString());
             if (rejected) {
-                resolve(getOfflineResponse(`"${reasons.join('", "')}"`));
+                resolve(getOfflineResponse(reasons.join(', ')));
             } else {
                 rejected = true;
             }
         };
 
-        const maybeResolve = result => {
-            if (result instanceof Response) {
-                resolve(result);
-            } else {
-                maybeReject(`No result returned from cache`);
-            }
-        };
-
         // Whichever resolves first will be the winner
-        networkFetch.then(maybeResolve, maybeReject);
-        cacheFetch.then(maybeResolve, maybeReject);
+        cacheFetch.then(resolve, maybeReject);
+        networkFetch.then(resolve, maybeReject);
     });
 }
 
@@ -117,4 +119,3 @@ async function swFetch(e) {
 self.addEventListener('install', e => e.waitUntil(swInstall()));
 self.addEventListener('activate', e => e.waitUntil(swActivate()));
 self.addEventListener('fetch', e => swFetch(e));
-
