@@ -1,6 +1,18 @@
 {
   "hosting": {
     "public": "public",
+    "ignore": [
+      ".gitignore",
+      "*.pem"
+    ],
+    "trailingSlash": false,
+    "rewrites": [{
+      "source": "/offexp",
+      "destination": "/offline/index.html"
+    }, {
+      "source": "/offline/resources",
+      "destination": "/offline/resources.json"
+    }],
     "headers": [{
       "source" : "/",
       "headers" : [{

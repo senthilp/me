@@ -1,25 +1,6 @@
 const VERSION = '1';
 const ASSETS = [
-    '/',
-    '/images/senthil.png'
 ];
-
-function getOfflineResponse(reason) {
-    const offlineMsg = `
-        ***********************************************************************
-        <br/>
-        <strong>Looks like you are either offline or something weird happened on my end</strong>
-        <br/>
-        ***********************************************************************        
-        <br/><br/>
-        <div style="display:none;">Possible reason(s): ${reason || 'None'}</div>
-    `;
-    return new Response(offlineMsg, {
-        status: 503,
-        statusText: 'Service Unavailable',
-        headers: { 'Content-Type': 'text/html' }
-    });
-}
 
 async function swInstall() {
     const cache = await caches.open(VERSION);
@@ -75,12 +56,12 @@ async function fetchNetworkFirst(req) {
         reasons.push(e.message);
     }
 
-    // Even cache failed so get offline response
-    return getOfflineResponse(reasons.join(', '));
+    // Even cache failed so fallback to browser default
+    throw Error(reasons.join(`, `));
 }
 
 async function fetchFastest(req) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         const networkFetch = fetchFromNetworkAndCache(req);
         const cacheFetch = fretchFromCache(req);
         let rejected = false;
@@ -89,7 +70,7 @@ async function fetchFastest(req) {
         const maybeReject = reason => {
             reasons.push(reason.toString());
             if (rejected) {
-                resolve(getOfflineResponse(reasons.join(', ')));
+                reject(Error(reasons.join(`, `)));
             } else {
                 rejected = true;
             }
