@@ -1,8 +1,31 @@
 const VERSION = '1';
-const ASSETS = [
+const ASSETS = [];
+const ALLOWED_URL_PATHS = [
+    '/'
 ];
 let offlineReady = false;
 let offlinePage;
+
+function requestExpectsHTML(headers) {
+    if (!headers) {
+        return false;
+    }
+    const acceptHeader = headers.get("Accept");
+    if (acceptHeader) {
+        return acceptHeader.indexOf('text/html') !== -1;
+    }
+    return false;
+}
+
+function isUrlPathAllowed(path) {
+    return ALLOWED_URL_PATHS.some(allowedPath => {
+        // Special check for root
+        if (allowedPath === '/') {
+            return allowedPath === path;
+        }
+        return new RegExp(allowedPath).test(path);
+    });
+}
 
 async function swInstall() {
     const cache = await caches.open(VERSION);
@@ -105,6 +128,27 @@ async function fetchFastest(req) {
     });
 }
 
+async function prepOffline(e) {
+    offlineReady = false;
+
+    try {
+        const offlineDataRes = await fetch(e.data.offlineDataService);
+        const offlineData = await offlineDataRes.json();
+        const offlineAssets = offlineData.assets;
+
+        await updateCacheEntities(offlineAssets);
+
+        // Set and add offline page to the asset queue
+        offlinePage = offlineData.page;
+        offlineAssets.push(offlinePage);
+
+        await addCacheEntities(offlineAssets);
+        offlineReady = true;
+    } catch (ex) {
+        // Offline Prep failed
+    }
+}
+
 async function swFetch(e) {
     // Initial checks, return immediately if
     // 1. user is online
@@ -121,29 +165,13 @@ async function swFetch(e) {
         return;
     }
 
-    if (url.pathname === '/') {
-        e.respondWith(fretchFromCache(offlinePage));
+    if (requestExpectsHTML(req.headers)) {
+        if (isUrlPathAllowed(url.pathname)) {
+            e.respondWith(fretchFromCache(offlinePage));
+        }
     } else {
         e.respondWith(fretchFromCache(req));
     }
-}
-
-async function prepOffline(e) {
-    offlineReady = false;
-
-    const offlineDataRes = await fetch(e.data.offlineDataService);
-    const offlineData = await offlineDataRes.json();
-    const offlineAssets = offlineData.assets;
-
-    await updateCacheEntities(offlineAssets);
-
-    // Set and add offline page to the asset queue
-    offlinePage = offlineData.page;
-    offlineAssets.push(offlinePage);
-
-    await addCacheEntities(offlineAssets);
-
-    offlineReady = true;
 }
 
 self.addEventListener('install', e => e.waitUntil(swInstall()));
