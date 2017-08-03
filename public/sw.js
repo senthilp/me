@@ -32,8 +32,10 @@ async function updateCacheEntities(entitiesToKeep) {
     const cacheKeys = await cache.keys();
     const existingEntities = cacheKeys.map(key => key.url);
 
-    existingEntities.filter(entity => !entitiesToKeep.includes(entity) && !ASSETS.includes(entity))
-                    .map(async entityToDelete => await cache.delete(entityToDelete));
+    const entitiesToDelete = existingEntities
+                            .filter(entity => !entitiesToKeep.includes(entity) && !ASSETS.includes(entity));
+
+    await Promise.all(entitiesToDelete.map(entityToDelete => cache.delete(entityToDelete)));
 }
 
 async function addCacheEntities(entities) {
@@ -41,9 +43,9 @@ async function addCacheEntities(entities) {
     const cacheKeys = await cache.keys();
     const existingEntities = cacheKeys.map(key => key.url);
 
-    const newEntities = entities.filter(entity => !existingEntities.includes(entity));
+    const entitiesToAdd = entities.filter(entity => !existingEntities.includes(entity));
 
-    await cache.addAll(newEntities);
+    await cache.addAll(entitiesToAdd);
 }
 
 async function fretchFromCache(req) {
