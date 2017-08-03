@@ -106,20 +106,25 @@ async function fetchFastest(req) {
 }
 
 async function swFetch(e) {
-    if (navigator.onLine) {
+    // Initial checks, return immediately if
+    // 1. user is online
+    // or
+    // 2. Offline cache is not ready
+    if (navigator.onLine || !offlineReady) {
         return;
     }
+
     const req = e.request;
     const url = new URL(req.url);
 
-    if (req.method !== 'GET' || url.origin !== location.origin) {
+    if (req.method !== 'GET') {
         return;
     }
 
-    if (req.method === "GET" && url.pathname === '/') {
-        e.respondWith(fetchNetworkFirst(req));
+    if (url.pathname === '/') {
+        e.respondWith(fretchFromCache(offlinePage));
     } else {
-        e.respondWith(fetchFastest(req));
+        e.respondWith(fretchFromCache(req));
     }
 }
 
