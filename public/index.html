@@ -223,9 +223,22 @@
 		</div>
 	</div>
 	<script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
-        }
+    window.addEventListener('load', function() {
+        window.requestAnimationFrame(function() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').then(function() {
+                    // Wait until the service worker is active
+                    return navigator.serviceWorker.ready;
+                }).then(function() {
+                    if (navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({
+                            offlineDataService: '/offline/resources'
+                        });
+                    }
+                });
+            }
+        });
+    });
 	</script>	
 	<script>
 		(function() {

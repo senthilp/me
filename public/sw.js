@@ -1,6 +1,8 @@
 const VERSION = '1';
 const ASSETS = [
 ];
+let offlineReady = false;
+let offlinePage;
 
 async function swInstall() {
     const cache = await caches.open(VERSION);
@@ -23,6 +25,25 @@ async function swActivate() {
 async function addToCache(req, res) {
     const cache = await caches.open(VERSION);
     cache.put(req, res);
+}
+
+async function updateCacheEntities(entitiesToKeep) {
+    const cache = await caches.open(VERSION);
+    const cacheKeys = await cache.keys();
+    const existingEntities = cacheKeys.map(key => key.url);
+
+    existingEntities.filter(entity => !entitiesToKeep.includes(entity) && !ASSETS.includes(entity))
+                    .map(async entityToDelete => await cache.delete(entityToDelete));
+}
+
+async function addCacheEntities(entities) {
+    const cache = await caches.open(VERSION);
+    const cacheKeys = await cache.keys();
+    const existingEntities = cacheKeys.map(key => key.url);
+
+    const newEntities = entities.filter(entity => !existingEntities.includes(entity));
+
+    await cache.addAll(newEntities);
 }
 
 async function fretchFromCache(req) {
@@ -83,6 +104,9 @@ async function fetchFastest(req) {
 }
 
 async function swFetch(e) {
+    if (navigator.onLine) {
+        return;
+    }
     const req = e.request;
     const url = new URL(req.url);
 
@@ -97,6 +121,25 @@ async function swFetch(e) {
     }
 }
 
+async function prepOffline(e) {
+    offlineReady = false;
+
+    const offlineDataRes = await fetch(e.data.offlineDataService);
+    const offlineData = await offlineDataRes.json();
+    const offlineAssets = offlineData.assets;
+
+    await updateCacheEntities(offlineAssets);
+
+    // Set and add offline page to the asset queue
+    offlinePage = offlineData.page;
+    offlineAssets.push(offlinePage);
+
+    await addCacheEntities(offlineAssets);
+
+    offlineReady = true;
+}
+
 self.addEventListener('install', e => e.waitUntil(swInstall()));
 self.addEventListener('activate', e => e.waitUntil(swActivate()));
 self.addEventListener('fetch', e => swFetch(e));
+self.addEventListener('message', e => prepOffline(e));
