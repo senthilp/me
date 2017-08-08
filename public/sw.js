@@ -166,7 +166,7 @@ async function swFetch(e) {
     }
 
     if (requestExpectsHTML(req.headers)) {
-        if (isUrlPathAllowed(url.pathname)) {
+        if (url.origin === location.origin && isUrlPathAllowed(url.pathname)) {
             e.respondWith(fretchFromCache(offlinePage));
         }
     } else {
