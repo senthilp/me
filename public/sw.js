@@ -4,7 +4,7 @@ const ALLOWED_URL_PATHS = [
     '/'
 ];
 let offlineReady = false;
-let offlinePage;
+let offlinePage = undefined;
 
 function requestExpectsHTML(headers) {
     if (!headers) {
