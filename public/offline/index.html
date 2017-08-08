@@ -17,6 +17,32 @@
             margin: 30px 0;
             text-align: center;
         }
+        .network-status__msg {
+            color: #fff;            
+            text-align: center;            
+            font-size: 12px;
+            line-height: 16px;
+            min-height: 32px;
+            padding: 8px;
+        }
+        .network-status__msg a {
+            color: inherit;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .network-status__msg--offline {
+            background-color: #282828;
+        }
+        .network-status__msg--online {
+            background-color: #008000;
+            display: none;
+        }        
+        .online .network-status__msg--offline {
+            display: none;   
+        }        
+        .online .network-status__msg--online {            
+            display: block;
+        }        
         .flex-center {
             display: flex;
             align-items: center;
@@ -43,8 +69,28 @@
             max-width: 225px;
         }        
     </style>
+    <script>
+        (function() {
+            function updateStatus() {
+                if (typeof navigator.onLine !== 'undefined') {
+                    document.documentElement.classList.toggle('online', navigator.onLine);
+                }
+            }
+            window.addEventListener('online', updateStatus);
+            window.addEventListener('offline', updateStatus);
+            window.addEventListener('load', updateStatus);
+        }());
+    </script>
 </head>
 <body>
+    <div  aria-live="assertive" aria-relevant="text" class="network-status">
+        <div class="network-status__msg network-status__msg--offline">
+            There seems to be a problem with your network. You are using an offline verion. We will update you when the network is back online.
+        </div>
+        <div class="network-status__msg network-status__msg--online">
+            Connection is back. Please click <a href="/">Reload</a> to refresh the page.
+        </div>            
+    </div>
     <header class="grid">
         <div class="grid__group grid__group--full">
             <h1>eBay - Offline</h1>
