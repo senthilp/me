@@ -231,7 +231,7 @@
                 // Post message to SW if ready
                 if (navigator.serviceWorker.controller) {
                     navigator.serviceWorker.controller.postMessage({
-                        offlineService: '/offline/resources'
+                        offlineData: '/offline/resources'
                     });
                 }
             }

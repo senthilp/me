@@ -132,7 +132,7 @@ async function prepOffline(e) {
     offlineReady = false;
 
     try {
-        const offlineDataRes = await fetch(e.data.offlineService);
+        const offlineDataRes = await fetch(e.data.offlineData);
         const offlineData = await offlineDataRes.json();
         const offlineAssets = offlineData.assets;
 
