@@ -1,4 +1,4 @@
-const VERSION = '1';
+const VERSION = '{%VERSION%}';
 const ASSETS = [];
 const ALLOWED_URL_PATHS = [
     '/'
