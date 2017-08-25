@@ -226,11 +226,12 @@
     window.addEventListener('load', function() {
         window.requestAnimationFrame(function() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                var regP = navigator.serviceWorker.register('/sw.js');
+                regP.then(function(reg) {
                     // Pick the newest worker in the registration
                     var newestWorker = reg.installing || reg.waiting || reg.active;
                     newestWorker.postMessage({
-                        offlineSrc: '/offline/resources'
+                        offlineSrc: "/offline/resources"
                     });
                 });
             }
