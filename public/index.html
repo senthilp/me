@@ -124,7 +124,7 @@
 <body>
 	<div>
 		<div class="hero bg-amber white">
-			<div class="center">
+			<div class="center" style="visibility: hidden;">
 				<div class="info">
 					<h2 itemprop="name">Senthil Padmanabhan</h2>
 					<ul>
@@ -226,14 +226,13 @@
     window.addEventListener('load', function() {
         window.requestAnimationFrame(function() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js');
-
-                // Post message to SW if ready
-                if (navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.controller.postMessage({
-                        offlineData: '/offline/resources'
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                    // Pick the newest worker in the registration
+                    var newestWorker = reg.installing || reg.waiting || reg.active;
+                    newestWorker.postMessage({
+                        offlineSrc: '/offline/resources'
                     });
-                }
+                });
             }
         });
     });
