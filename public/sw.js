@@ -30,12 +30,19 @@ async function swInstall() {
 async function swActivate() {
     const keys = await caches.keys();
     const deletes = [];
+
     for (const key of keys) {
         if (key !== VERSION) {
             deletes.push(caches.delete(key));
         }
     }
     await Promise.all(deletes);
+
+    if (self.registration.navigationPreload) {
+        // Enable navigation preloads!
+        await self.registration.navigationPreload.enable();
+    }
+
     await self.clients.claim();
 }
 
