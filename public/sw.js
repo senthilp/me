@@ -6,17 +6,6 @@ const ALLOWED_URL_PATHS = [
 let offlineReady = false;
 let offlinePage = undefined;
 
-function requestExpectsHTML(headers) {
-    if (!headers) {
-        return false;
-    }
-    const acceptHeader = headers.get("Accept");
-    if (acceptHeader) {
-        return acceptHeader.indexOf('text/html') !== -1;
-    }
-    return false;
-}
-
 function isUrlPathAllowed(path) {
     return ALLOWED_URL_PATHS.some(allowedPath => {
         // Special check for root
@@ -93,7 +82,7 @@ async function fetchFromNetworkAndCache(req) {
     return res;
 }
 
-async function fetchNetworkFirst(req) {
+async function fetchNetworkFirst(req) { // eslint-disable-line no-unused-vars
     const reasons = [];
     // Try netwrok first
     try {
@@ -113,7 +102,7 @@ async function fetchNetworkFirst(req) {
     throw Error(reasons.join(`, `));
 }
 
-async function fetchFastest(req) {
+async function fetchFastest(req) { // eslint-disable-line no-unused-vars
     return new Promise((resolve, reject) => {
         const networkFetch = fetchFromNetworkAndCache(req);
         const cacheFetch = fretchFromCache(req);
@@ -172,7 +161,7 @@ async function swFetch(e) {
         return;
     }
 
-    if (requestExpectsHTML(req.headers)) {
+    if (e.request.mode === 'navigate') {
         if (url.origin === location.origin && isUrlPathAllowed(url.pathname)) {
             e.respondWith(fretchFromCache(offlinePage));
         }
