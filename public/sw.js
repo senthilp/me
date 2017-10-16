@@ -52,7 +52,7 @@ async function updateCacheEntities(entitiesToKeep) {
     const existingEntities = cacheKeys.map(key => key.url);
 
     const entitiesToDelete = existingEntities
-                            .filter(entity => !entitiesToKeep.includes(entity) && !ASSETS.includes(entity));
+        .filter(entity => !entitiesToKeep.includes(entity) && !ASSETS.includes(entity));
 
     await Promise.all(entitiesToDelete.map(entityToDelete => cache.delete(entityToDelete)));
 }
