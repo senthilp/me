@@ -3,8 +3,7 @@ const ASSETS = [];
 const ALLOWED_URL_PATHS = [
     '/'
 ];
-let offlineReady = false;
-let offlinePage = undefined;
+const offlineMap = new Map();
 
 function isUrlPathAllowed(path) {
     return ALLOWED_URL_PATHS.some(allowedPath => {
@@ -14,6 +13,14 @@ function isUrlPathAllowed(path) {
         }
         return new RegExp(allowedPath).test(path);
     });
+}
+
+function getOfflineKey(url) {
+    const urlObj = new URL(url);
+    const pathMatches = urlObj.pathname.match(/(^\/[^\/]*)\/?/);
+    const seoToken = pathMatches ? pathMatches[1] : '';
+
+    return urlObj.origin + seoToken;
 }
 
 async function swInstall() {
@@ -125,32 +132,33 @@ async function fetchFastest(req) { // eslint-disable-line no-unused-vars
 }
 
 async function prepOffline(e) {
-    offlineReady = false;
-
     try {
+        // Reset the offline Map to null to clear current entries
+        // This also makes the prep step atomic
+        const offlineKey = getOfflineKey(e.data.currentPage);
+        offlineMap.set(offlineKey, null);
+
         const offlineDataRes = await fetch(e.data.offlineSrc);
         const offlineData = await offlineDataRes.json();
         const offlineAssets = offlineData.assets;
 
         await updateCacheEntities(offlineAssets);
 
-        // Set and add offline page to the asset queue
-        offlinePage = offlineData.page;
+        // Add offline page to the asset queue
+        const offlinePage = offlineData.page;
         offlineAssets.push(offlinePage);
 
         await addCacheEntities(offlineAssets);
-        offlineReady = true;
+
+        offlineMap.set(offlineKey, offlinePage);
     } catch (ex) {
         // Offline Prep failed
     }
 }
 
 async function swFetch(e) {
-    // Initial checks, return immediately if
-    // 1. user is online
-    // or
-    // 2. Offline cache is not ready
-    if (navigator.onLine || !offlineReady) {
+    // Initial checks, return immediately if user is online
+    if (navigator.onLine) {
         return;
     }
 
@@ -162,6 +170,11 @@ async function swFetch(e) {
     }
 
     if (e.request.mode === 'navigate') {
+        // Return if offline cache is not ready
+        const offlinePage = offlineMap.get(getOfflineKey(req.url));
+        if (!offlinePage) {
+            return;
+        }
         if (url.origin === location.origin && isUrlPathAllowed(url.pathname)) {
             e.respondWith(fretchFromCache(offlinePage));
         }

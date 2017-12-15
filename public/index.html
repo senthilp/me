@@ -235,7 +235,8 @@
                     // Pick the newest worker in the registration
                     var newestWorker = reg.installing || reg.waiting || reg.active;
                     newestWorker.postMessage({
-                        offlineSrc: "/offline/resources"
+                        offlineSrc: "/offline/resources",
+                        currentPage: location.href
                     });
                 });
             }
