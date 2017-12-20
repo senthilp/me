@@ -40,11 +40,6 @@ async function swActivate() {
     }
     await Promise.all(deletes);
 
-    if (self.registration.navigationPreload) {
-        // Enable navigation preloads!
-        await self.registration.navigationPreload.enable();
-    }
-
     await self.clients.claim();
 }
 
