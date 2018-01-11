@@ -1,19 +1,6 @@
 const VERSION = '{%VERSION%}';
 const ASSETS = [];
-const ALLOWED_URL_PATHS = [
-    '/'
-];
 const offlineMap = new Map();
-
-function isUrlPathAllowed(path) {
-    return ALLOWED_URL_PATHS.some(allowedPath => {
-        // Special check for root
-        if (allowedPath === '/') {
-            return allowedPath === path;
-        }
-        return new RegExp(allowedPath).test(path);
-    });
-}
 
 function getOfflineKey(url) {
     const urlObj = new URL(url);
@@ -69,7 +56,7 @@ async function addCacheEntities(entities) {
     await cache.addAll(entitiesToAdd);
 }
 
-async function fretchFromCache(req) {
+async function fetchFromCache(req) {
     const cache = await caches.open(VERSION);
     const cacheRes = await cache.match(req);
     if (!cacheRes) {
@@ -84,18 +71,29 @@ async function fetchFromNetworkAndCache(req) {
     return res;
 }
 
-async function fetchNetworkFirst(req) { // eslint-disable-line no-unused-vars
+async function fetchNetworkFirst(req, cacheResponse = false) {
     const reasons = [];
     // Try netwrok first
     try {
-        return await fetchFromNetworkAndCache(req);
+        const networkFetch = cacheResponse ? fetchFromNetworkAndCache(req) : fetch(req);
+        return await networkFetch;
     } catch (e) {
         reasons.push(e.message);
     }
 
     // Network failed so try cache
     try {
-        return await fretchFromCache(req);
+        return await fetchFromCache(req);
+    } catch (e) {
+        reasons.push(e.message);
+    }
+
+    // Cache failed, try the offline page if available
+    try {
+        const offlinePage = offlineMap.get(getOfflineKey(req.url));
+        if (offlinePage) {
+            return await fetchFromCache(offlinePage);
+        }
     } catch (e) {
         reasons.push(e.message);
     }
@@ -104,10 +102,10 @@ async function fetchNetworkFirst(req) { // eslint-disable-line no-unused-vars
     throw Error(reasons.join(`, `));
 }
 
-async function fetchFastest(req) { // eslint-disable-line no-unused-vars
+async function fetchFastest(req, cacheResponse = false) {
     return new Promise((resolve, reject) => {
-        const networkFetch = fetchFromNetworkAndCache(req);
-        const cacheFetch = fretchFromCache(req);
+        const networkFetch = cacheResponse ? fetchFromNetworkAndCache(req) : fetch(req);
+        const cacheFetch = fetchFromCache(req);
         let rejected = false;
         const reasons = [];
 
@@ -152,11 +150,6 @@ async function prepOffline(e) {
 }
 
 async function swFetch(e) {
-    // Initial checks, return immediately if user is online
-    if (navigator.onLine) {
-        return;
-    }
-
     const req = e.request;
     const url = new URL(req.url);
 
@@ -165,16 +158,11 @@ async function swFetch(e) {
     }
 
     if (e.request.mode === 'navigate') {
-        // Return if offline cache is not ready
-        const offlinePage = offlineMap.get(getOfflineKey(req.url));
-        if (!offlinePage) {
-            return;
-        }
-        if (url.origin === location.origin && isUrlPathAllowed(url.pathname)) {
-            e.respondWith(fretchFromCache(offlinePage));
+        if (url.origin === location.origin) {
+            e.respondWith(fetchNetworkFirst(req));
         }
     } else {
-        e.respondWith(fretchFromCache(req));
+        e.respondWith(fetchFastest(req));
     }
 }
 
