@@ -75,7 +75,7 @@ async function fetchNetworkFirst(req, cacheResponse = false) {
     const reasons = [];
     // Try netwrok first
     try {
-        const networkFetch = cacheResponse ? fetchFromNetworkAndCache(req) : fetch(req);
+        const networkFetch = cacheResponse ? fetchFromNetworkAndCache(req) : fetch(req.url, {credentials: 'include'});
         return await networkFetch;
     } catch (e) {
         reasons.push(e.message);
