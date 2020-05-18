@@ -116,7 +116,7 @@ async function swFetch(e) {
         return;
     }
 
-    if (req.method === "GET" && url.pathname === '/') {
+    if (req.method === 'GET' && url.pathname === '/') {
         e.respondWith(fetchNetworkFirst(req));
     } else {
         e.respondWith(fetchFastest(req));
