@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<link rel="icon" href="/favicon.ico">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="layout" content="main" />
+	<title>Senthil Padmanabhan — senthilp.com</title>
+	<style>
+		body{
+			margin: 0;
+			padding: 0;
+			font-family: 'Open Sans',sans-serif;
+			color: #333;
+		}
+		a {
+			text-decoration: none;
+			color: #0064d2;
+		}
+		.fl {
+			float: left;
+		}
+		.fr {
+			float: right;
+		}
+		.clr {
+			display: block;
+			clear: both;
+		}
+		.clr:after {
+			display: block;
+			visibility: hidden;
+			clear: both;
+			overflow: hidden;
+			height: 0;
+			content: "\0020";
+		}
+		.white {
+			color: #fff;
+		}
+		.bg-amber {
+			background-color: #282828;
+		}
+		.center {
+			max-width: 750px;
+			margin: 0 auto;
+			padding: 0 10px;
+		}
+		.hero .info {
+			padding: 60px 15px 40px;
+			/* background: url(/images/senthil.png) no-repeat 100% 100%; */
+		}
+		/* 
+		@media(max-width: 500px) {
+			.hero .info {
+				background: url(/images/senthil-trans.png) no-repeat 100% 100%;
+			}
+		}
+		*/
+		.hero ul {
+			color: #bfbfbf;
+			list-style-type: circle;
+			padding: 0;
+		}
+		.hero ul li {
+			padding-bottom: 5px;
+		}
+		.hero .social a {
+			padding-right: 5px;
+		}
+		[class*=" icon"], [class^="icon"] {
+			display: inline-block;
+			width: 35px;
+			height: 35px;
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASEAAAA5CAYAAAB5751ZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyNzE4MUQzQ0EwQTMxMUUzOTJBMUFBRjYyOEQ0MENDRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoyNzE4MUQzREEwQTMxMUUzOTJBMUFBRjYyOEQ0MENDRSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjI3MTgxRDNBQTBBMzExRTM5MkExQUFGNjI4RDQwQ0NFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjI3MTgxRDNCQTBBMzExRTM5MkExQUFGNjI4RDQwQ0NFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+jOMSSgAADUhJREFUeNrtnX9w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");
+		  	background-repeat: no-repeat;
+		}
+		.icon-in {
+			background-position: -185px -10px;
+		}
+		.icon-tw {
+			background-position: -127px -10px;
+		}
+		.icon-gh {
+			background-position: -242px -10px;
+		}
+		.icon-fb {
+			background-position: -13px -10px;
+		}		
+		.icon-ss {
+			background-image: url("data:image/png;base64,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");	
+			background-position: 3px 4px;		
+		}
+		.main ul.posts {
+			list-style-type: none;
+			padding: 0;
+		}
+		ul.posts li {
+			border-bottom: 1px solid #eee;
+			padding: 15px 0 10px;
+		}
+		ul.posts li:last-child {
+			border-bottom: none;
+		}
+		.time {
+			color: #666;
+			font-size: 0.9em;
+		}
+		.posts .title {
+			width: 70%;
+		}
+	</style>
+	<meta name="author" content="Senthil Padmanabhan"/>
+	<meta name="description" content="Senthil Padmanabhan is the Vice President of Platform & Infra at eBay."/>
+    <meta property="og:url" content="https://www.senthilp.com"/>
+	<meta property="og:image" content="https://www.senthilp.com/images/senthil.png"/>
+    <meta property="og:title" content="Senthil Padmanabhan — senthilp.com"/>
+    <meta property="og:description" content="Senthil Padmanabhan is the Vice President of Platform & Infra at eBay."/>    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:creator" content="@senthil_hi">
+	<meta property="twitter:account_id" content="88984815" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui"/>
+	<meta name="apple-mobile-web-app-title" content="Senthil Blog" />
+	<link rel=canonical href="https://www.senthilp.com"/>
+</head>
+<body>
+	<div>
+		<div class="hero bg-amber white">
+			<div class="center">
+				<div class="info">
+					<h2 itemprop="name">Senthil Padmanabhan</h2>
+					<ul>
+						<li>Software, books, and everything in between</li>
+						<li>Vice President, Platform & Infra at <span itemprop="affiliation">eBay</span></li>
+					</ul>
+					<div class="social">
+						<a rel="me" href="https://twitter.com/senthil_hi" title="Twitter"><i class="icon-tw"></i></a>
+						<a rel="me" href="https://www.linkedin.com/in/senthilpadmanabhan/" title="LinkedIn"><i class="icon-in"></i></a>
+						<a rel="me" href="https://github.com/senthilp" title="GitHub"><i class="icon-gh"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="main">
+			<div class="center">
+				<h3 id="timeline">Posts, Talks, &amp; More </h3>
+				<ul class="posts">
+					<li class="clr">
+						<span class="title fl"><strong>Podcast: </strong><a href="https://brave.com/podcast/e54/">The Impact of Strategic Fine Tuning on Achieving Peak Performance (LIVE from AI Summit NYC)</a></span>
+						<span class="time fr">Jan 16, 2025</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/@senthilpad/what-i-read-in-2024-44e6f5a09484">What I Read in 2024</a></span>
+						<span class="time fr">Dec 17, 2024</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/@senthilpad/cutting-through-the-noise-three-things-weve-learned-about-generative-ai-and-developer-d09ea8857a07">Cutting Through the Noise: Three Things We’ve Learned About Generative AI and Developer Productivity</a></span>
+						<span class="time fr">Feb 29, 2024</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://senthilpad.medium.com/2023-reading-list-ede4324ed720">2023 Reading List</a></span>
+						<span class="time fr">Dec 18, 2023</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/@senthilpad/adventure-through-the-pages-a-2022-reading-journey-1ab52e59ec0a">Adventure through the Pages: A 2022 Reading Journey</a></span>
+						<span class="time fr">Jan 04, 2023</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><strong>Podcast: </strong><a href="https://performancecafe.codavel.com/app-performance-cafe-cafe-with-senthil-from-ebay-on-the-importance-of-speed-consistency/">App Performance Café</a></span>
+						<span class="time fr">Mar 17, 2022</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><strong>Podcast: </strong><a href="https://softwareengineeringdaily.com/2022/02/18/the-staging-dichotomy-with-senthil-padmanabhan/">Software Engineering Daily</a></span>
+						<span class="time fr">Feb 18, 2022</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="https://senthilpad.medium.com/adding-vibrancy-to-prosaicness-2021-reading-list-f6ddb61d39a">Adding Vibrancy to Prosaicness — 2021 Reading List</a></span>
+						<span class="time fr">Jan 10, 2022</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/ebaytech/the-staging-dichotomy-part-two-d886ca2511dd">The Staging Dichotomy: Part Two</a></span>
+						<span class="time fr">Dec 8, 2021</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/ebaytech/the-staging-dichotomy-part-one-7f0667de84b5">The Staging Dichotomy: Part One</a></span>
+						<span class="time fr">Dec 6, 2021</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://senthilpad.medium.com/a-trusted-companion-of-2020-books-8fb4c87fd76e">A Trusted Companion of 2020 — Books</a></span>
+						<span class="time fr">Dec 15, 2020</span>
+					</li>						
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/ebaytech/building-a-product-catalog-ebays-2nd-annual-university-machine-learning-competition-2b163e730867">Building a Product Catalog: eBay’s 2nd Annual University Machine Learning Competition</a></span>
+						<span class="time fr">Aug 26, 2020</span>
+					</li>						
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/ebaytech/building-a-product-catalog-what-we-learned-from-our-university-machine-learning-competition-2b34a9be48e9">Building a Product Catalog: What we Learned from our University Machine Learning Competition</a></span>
+						<span class="time fr">May 18, 2020</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/ebaytech/speed-by-a-thousand-cuts-1a276b933bf7">Speed By A Thousand Cuts</a></span>
+						<span class="time fr">Jan 23, 2020</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://builtin.com/big-data/unstructured-data-machine-learning-ebay">How Machine Learning is Helping Solve eBay’s Unstructured Data Problem</a></span>
+						<span class="time fr">Jan 14, 2020</span>
+					</li>					
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/@senthil_hi/the-best-of-books-and-food-in-2019-3ca084f582ed">The Best of Books and Food in 2019</a></span>
+						<span class="time fr">Dec 17, 2019</span>
+					</li>													
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/ebaytech/building-a-product-catalog-ebays-university-machine-learning-competition-12a73f3d64e5">Building a Product Catalog: eBay's University Machine Learning Competition</a></span>
+						<span class="time fr">Oct 16, 2019</span>
+					</li>											
+					<li class="clr">
+						<span class="title fl"><a href="https://www.lumavate.com/podcasts/why-you-should-say-no/">Mobile Matters Podcast — Why You Should Say No to 99 Things and Yes to One</a></span>
+						<span class="time fr">Jul 15, 2019</span>
+					</li>									
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/ebaytech/webassembly-at-ebay-a-real-world-use-case-ef888f38b537">WebAssembly at eBay: A Real-World Use Case</a></span>
+						<span class="time fr">May 22, 2019</span>
+					</li>									
+					<li class="clr">
+						<span class="title fl"><a href="https://youtu.be/ogEhUnQdQiU">Embracing Modern Technologies — LinkedIn Performance Talk</a></span>
+						<span class="time fr">Jan 07, 2019</span>
+					</li>				
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/@senthil_hi/my-2018-reading-list-8be6b315ae20">My 2018 Reading List</a></span>
+						<span class="time fr">Dec 19, 2018</span>
+					</li>		
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/@senthil_hi/the-web-push-checklist-3d7ee1225901">The Web Push Checklist</a></span>
+						<span class="time fr">Aug 02, 2018</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="https://www.bizjournals.com/sanjose/c/silicon-valley-40-under-40-class-2018/5716/senthil-padmanabhan.html">Silicon Valley Business Journal's 40 under 40</a></span>
+						<span class="time fr">Jul 31, 2018</span>
+					</li>
+					<li class="clr">
+                        <span class="title fl"><a href="https://www.ebayinc.com/stories/news/exploring-progressive-web-apps-to-enhance-ebays-mobile-experience/">Exploring Progressive Web Apps to Enhance eBay’s Mobile Experience</a></span>
+                        <span class="time fr">May 10, 2018</span>
+                    </li>                                                            					
+                    <li class="clr">
+                        <span class="title fl"><a href="https://calendar.perfplanet.com/2017/beyond-https/">Beyond HTTPS</a></span>
+                        <span class="time fr">Dec 19, 2017</span>
+                    </li>                                                            
+                    <li class="clr">
+                        <span class="title fl"><a href="https://www.ebayinc.com/stories/blogs/tech/experience-services-ebays-solution-to-multi-screen-application-development/">Experience Services — eBay’s Solution to Multi-Screen Application Development</a></span>
+                        <span class="time fr">Nov 30, 2017</span>
+                    </li>                                        
+                    <li class="clr">
+                        <span class="title fl"><a href="http://www.ebaytechblog.com/2017/09/21/ebays-font-loading-strategy/">eBay’s Font Loading Strategy</a></span>
+                        <span class="time fr">Sep 21, 2017</span>
+                    </li>                    
+					<li class="clr">
+						<span class="title fl"><a href="https://medium.com/@senthil_hi/building-a-ui-component-in-2017-and-beyond-1f6d5c4d464">Building a UI Component in 2017 and Beyond</a></span>
+						<span class="time fr">May 3, 2017</span>
+					</li>								
+					<li class="clr">
+						<span class="title fl"><a href="https://www.ebayinc.com/stories/news/at-ebay-we-are-vastly-improving-mobile-web-experiences/">At eBay, We Are Vastly Improving Mobile Web Experiences</a></span>
+						<span class="time fr">Mar 16, 2017</span>
+					</li>												
+					<li class="clr">
+						<span class="title fl"><a href="https://www.youtube.com/watch?v=wr2SfwCUI0M">AMP Conf 2017 Talk</a></span>
+						<span class="time fr">Mar 7, 2017</span>
+					</li>								
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2016/09/21/experience-the-lightning-bolt/">Experience the Lightning Bolt</a></span>
+						<span class="time fr">Sep 21, 2016</span>
+					</li>				
+					<li class="clr">
+						<span class="title fl"><strong>Interview: </strong><a href="https://www.ebayinc.com/stories/news/ebay-leverages-amp-technology-for-next-generation-mobile-browsing/">Bringing AMP & eCommerce together</a></span>
+						<span class="time fr">Jun 30, 2016</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2016/06/30/browse-ebay-with-style-and-speed/">Browse eBay with Style and Speed</a></span>
+						<span class="time fr">Jun 30, 2016</span>
+					</li>									
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2016/03/15/the-path-to-javascript-next/">The Path to JavaScript Next</a></span>
+						<span class="time fr">Mar 15, 2016</span>
+					</li>								
+					<li class="clr">
+						<span class="title fl"><a href="http://calendar.perfplanet.com/2015/packaging-for-performance/">Packaging for Performance</a></span>
+						<span class="time fr">Dec 29, 2015</span>
+					</li>				
+					<li class="clr">
+						<span class="title fl"><a href="http://calendar.perfplanet.com/2014/the-power-of-perceived-performance/">The Power of Perceived Performance</a></span>
+						<span class="time fr">Dec 27, 2014</span>
+					</li>				
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2014/10/02/dont-build-pages-build-modules/">Don’t Build Pages, Build Modules</a></span>
+						<span class="time fr">Oct 2, 2014</span>
+					</li>				
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2014/03/05/yet-another-responsive-vs-adaptive-story/">Yet Another Responsive vs. Adaptive Story</a></span>
+						<span class="time fr">Mar 5, 2014</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://www.meetup.com/The-Great-WebDev-Debates/events/136998692/">The Great WebDev Debates - Responsive vs. Adpative</a> | <a href="http://www.youtube.com/playlist?list=PLtI_Kze3cHz5ftzIxz2-0hS8ShF6uU2Ny">Videos</a></span>
+						<span class="time fr">Oct 10, 2013</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2013/05/17/how-we-built-ebays-first-node-js-application/">How We Built eBay’s First Node.js Application</a></span>
+						<span class="time fr">May 17, 2013</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://calendar.perfplanet.com/2012/spofcheck-fighting-frontend-spof-at-its-root/">SPOFCheck – Fighting Frontend SPOF at its root</a></span>
+						<span class="time fr">Dec 27, 2012</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2012/04/16/five-javascript-tips-for-a-sleek-user-experience/">Five JavaScript Tips for a Sleek User Experience</a></span>
+						<span class="time fr">Apr 16, 2012</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2011/10/14/the-new-ebay-motors-homepage-is-2x-faster/">The New eBay Motors Homepage is 2X Faster</a></span>
+						<span class="time fr">Oct 14, 2011</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://www.ebaytechblog.com/2011/07/12/data-uri-sprites/">Data URI Sprites</a></span>
+						<span class="time fr">Jul 12, 2011</span>
+					</li>
+					<li class="clr">
+						<span class="title fl"><a href="http://developer.yahoo.com/blogs/ydn/yui-3-asyncqueue-cache-warmer-better-yahoo-mail-31211.html">Yahoo! Mail Cache Warmer</a></span>
+						<span class="time fr">Jan 21, 2011</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+	</script>	
+	<script>
+		(function() {
+			if(!window.console || !window.performance) {
+				return;
+			}			
+			var resourceStats = function() {
+				var entries = performance.getEntries && performance.getEntries();
+				if(!entries) {
+					return;
+				}
+				console.log('%c senthilp.com Resource Stats', 'color: red; font-weight: bold; font-size: 20px;');
+				console.log('%c External resource count: %d', 'color: #666; font-weight: bold; font-size: 16px;', entries.length);
+				entries.forEach(function(entry) {
+					console.log('%c %s (%dms)', 'color: #666; font-size: 14px;', entry.name, entry.duration);	
+				});
+			};
+			window.addEventListener('load', function() {
+				requestAnimationFrame(resourceStats);
+			}, false);
+		})();		
+	</script>		
+	<script>		
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-48787922-1', 'senthilp.com');
+	  ga('send', 'pageview');
+	</script>
+</body>
+</html>
