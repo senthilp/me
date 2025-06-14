@@ -51,7 +51,7 @@ async function addToCache(req, res) {
     cache.put(req, res);
 }
 
-async function fretchFromCache(req) {
+async function fetchFromCache(req) {
     const cache = await caches.open(VERSION);
     const cacheRes = await cache.match(req);
     if (!cacheRes) {
@@ -68,7 +68,7 @@ async function fetchFromNetworkAndCache(req) {
 
 async function fetchNetworkFirst(req) {
     const reasons = [];
-    // Try netwrok first
+    // Try network first
     try {
         return await fetchFromNetworkAndCache(req);
     } catch (e) {
@@ -77,7 +77,7 @@ async function fetchNetworkFirst(req) {
 
     // Network failed so try cache
     try {
-        return await fretchFromCache(req);
+        return await fetchFromCache(req);
     } catch (e) {
         reasons.push(e.message);
     }
@@ -89,7 +89,7 @@ async function fetchNetworkFirst(req) {
 async function fetchFastest(req) {
     return new Promise(resolve => {
         const networkFetch = fetchFromNetworkAndCache(req);
-        const cacheFetch = fretchFromCache(req);
+        const cacheFetch = fetchFromCache(req);
         let rejected = false;
         const reasons = [];
 
